@@ -45,6 +45,8 @@ export interface ManagerMeeting {
   createdAt: string;
 }
 
+export type ScheduleCategory = "shoot" | "pitch" | "fitting" | "travel" | "blackout";
+
 export interface ShootScheduleCall {
   id: string;
   actorId: string;
@@ -52,6 +54,8 @@ export interface ShootScheduleCall {
   characterName: string;
   project: string;
   shootDate: string;
+  isoDate?: string;
+  category?: ScheduleCategory;
   dayNumber: number;
   totalDays: number;
   pickupTime: string;
@@ -152,6 +156,7 @@ interface CinemaContextType {
   updateMeetingStatus: (id: string, status: ManagerMeeting["status"]) => void;
 
   shootSchedules: ShootScheduleCall[];
+  addShootSchedule: (schedule: Omit<ShootScheduleCall, "id">) => void;
   updateShootSchedule: (id: string, updates: Partial<ShootScheduleCall>) => void;
   acknowledgeSchedule: (id: string) => void;
 
@@ -283,6 +288,8 @@ const defaultSchedules: ShootScheduleCall[] = [
     characterName: "Commander Thorne",
     project: "Chrono Raiders",
     shootDate: "Friday, Nov 14, 2026",
+    isoDate: "2026-11-14",
+    category: "shoot",
     dayNumber: 29,
     totalDays: 52,
     pickupTime: "05:15 AM",
@@ -304,6 +311,8 @@ const defaultSchedules: ShootScheduleCall[] = [
     characterName: "Dr. Elena Croft",
     project: "Chrono Raiders",
     shootDate: "Friday, Nov 14, 2026",
+    isoDate: "2026-11-14",
+    category: "shoot",
     dayNumber: 29,
     totalDays: 52,
     pickupTime: "05:30 AM",
@@ -325,6 +334,8 @@ const defaultSchedules: ShootScheduleCall[] = [
     characterName: "Jax (Stunt Lead)",
     project: "Chrono Raiders",
     shootDate: "Friday, Nov 14, 2026",
+    isoDate: "2026-11-14",
+    category: "shoot",
     dayNumber: 29,
     totalDays: 52,
     pickupTime: "09:30 AM",
@@ -336,6 +347,204 @@ const defaultSchedules: ShootScheduleCall[] = [
     assignedDriver: "Production Van #3",
     driverPhone: "+1 (310) 555-0811",
     specialWardrobeNotes: "High-fall stunt harness inspection with Stunt Coordinator George Cottle.",
+    status: "published",
+  },
+  {
+    id: "sch-4",
+    actorId: "act-1",
+    actorName: "Marcus Sterling",
+    characterName: "Commander Thorne",
+    project: "Chrono Raiders",
+    shootDate: "Saturday, Nov 15, 2026",
+    isoDate: "2026-11-15",
+    category: "shoot",
+    dayNumber: 30,
+    totalDays: 52,
+    pickupTime: "03:30 PM",
+    hmuTime: "04:30 PM",
+    onSetTime: "06:00 PM",
+    estimatedWrapTime: "04:00 AM",
+    locationName: "Vasquez Rocks Soundstage & Night Canyon",
+    locationAddress: "10700 Escondido Canyon Rd, Agua Dulce, CA 91390",
+    assignedDriver: "Frank Perez (Driver #4)",
+    driverPhone: "+1 (310) 555-0822",
+    specialWardrobeNotes: "Night shoot wet-down sequence. Thermal undergarments required.",
+    status: "published",
+  },
+  {
+    id: "sch-5",
+    actorId: "act-1",
+    actorName: "Marcus Sterling",
+    characterName: "Detective Ray Cole",
+    project: "Neon Horizon",
+    shootDate: "Wednesday, Nov 12, 2026",
+    isoDate: "2026-11-12",
+    category: "fitting",
+    dayNumber: 0,
+    totalDays: 45,
+    pickupTime: "09:00 AM",
+    hmuTime: "09:30 AM",
+    onSetTime: "10:00 AM",
+    estimatedWrapTime: "02:00 PM",
+    locationName: "Sunset Gower Studios (Stage 8)",
+    locationAddress: "1438 N Gower St, Hollywood, CA 90028",
+    assignedDriver: "Executive Towncar #1",
+    driverPhone: "+1 (310) 555-0144",
+    specialWardrobeNotes: "Costume Designer Colleen Atwood bespoke leather trench fitting.",
+    status: "wrapped",
+  },
+  {
+    id: "sch-6",
+    actorId: "act-1",
+    actorName: "Marcus Sterling",
+    characterName: "Himself / Talent Pitch",
+    project: "Project Odyssey",
+    shootDate: "Thursday, Nov 13, 2026",
+    isoDate: "2026-11-13",
+    category: "pitch",
+    dayNumber: 0,
+    totalDays: 1,
+    pickupTime: "01:00 PM",
+    hmuTime: "01:30 PM",
+    onSetTime: "02:00 PM",
+    estimatedWrapTime: "04:30 PM",
+    locationName: "Warner Bros. Studios Burbank (Building 140)",
+    locationAddress: "4000 Warner Blvd, Burbank, CA 91522",
+    assignedDriver: "Frank Perez (Driver #4)",
+    driverPhone: "+1 (310) 555-0822",
+    specialWardrobeNotes: "Smart casual business attire for Director Christopher Nolan script reading.",
+    status: "wrapped",
+  },
+  {
+    id: "sch-7",
+    actorId: "act-2",
+    actorName: "Elena Rostova",
+    characterName: "Herself / Brand Ambassador",
+    project: "Vogue Cover Editorial",
+    shootDate: "Monday, Nov 17, 2026",
+    isoDate: "2026-11-17",
+    category: "fitting",
+    dayNumber: 1,
+    totalDays: 1,
+    pickupTime: "07:30 AM",
+    hmuTime: "08:30 AM",
+    onSetTime: "10:00 AM",
+    estimatedWrapTime: "06:00 PM",
+    locationName: "Milk Studios Hollywood (Stage 1)",
+    locationAddress: "855 N Cahuenga Blvd, Los Angeles, CA 90038",
+    assignedDriver: "David Ruiz (Executive Sedan #2)",
+    driverPhone: "+1 (310) 555-0844",
+    specialWardrobeNotes: "Couture gown trials with Vogue stylist Edward Enninful.",
+    status: "published",
+  },
+  {
+    id: "sch-8",
+    actorId: "act-1",
+    actorName: "Marcus Sterling",
+    characterName: "Brand Ambassador",
+    project: "Omega Global Campaign",
+    shootDate: "Tuesday, Nov 18, 2026",
+    isoDate: "2026-11-18",
+    category: "pitch",
+    dayNumber: 0,
+    totalDays: 1,
+    pickupTime: "10:00 AM",
+    hmuTime: "10:30 AM",
+    onSetTime: "11:00 AM",
+    estimatedWrapTime: "01:30 PM",
+    locationName: "SoHo House West Hollywood",
+    locationAddress: "9200 Sunset Blvd, West Hollywood, CA 90069",
+    assignedDriver: "Executive Towncar #1",
+    driverPhone: "+1 (310) 555-0144",
+    specialWardrobeNotes: "Contract signing and campaign vision presentation.",
+    status: "published",
+  },
+  {
+    id: "sch-9",
+    actorId: "act-1",
+    actorName: "Marcus Sterling",
+    characterName: "Commander Thorne",
+    project: "Chrono Raiders",
+    shootDate: "Friday, Nov 20, 2026",
+    isoDate: "2026-11-20",
+    category: "shoot",
+    dayNumber: 31,
+    totalDays: 52,
+    pickupTime: "05:00 AM",
+    hmuTime: "05:45 AM",
+    onSetTime: "07:00 AM",
+    estimatedWrapTime: "07:00 PM",
+    locationName: "Red Rock Canyon State Park",
+    locationAddress: "37749 Abbott Dr, Cantil, CA 93519",
+    assignedDriver: "Frank Perez (Driver #4)",
+    driverPhone: "+1 (310) 555-0822",
+    specialWardrobeNotes: "High-speed desert hovercraft chase sequences.",
+    status: "published",
+  },
+  {
+    id: "sch-10",
+    actorId: "act-2",
+    actorName: "Elena Rostova",
+    characterName: "Dr. Elena Croft",
+    project: "Chrono Raiders",
+    shootDate: "Friday, Nov 20, 2026",
+    isoDate: "2026-11-20",
+    category: "shoot",
+    dayNumber: 31,
+    totalDays: 52,
+    pickupTime: "05:00 AM",
+    hmuTime: "05:45 AM",
+    onSetTime: "07:00 AM",
+    estimatedWrapTime: "07:00 PM",
+    locationName: "Red Rock Canyon State Park",
+    locationAddress: "37749 Abbott Dr, Cantil, CA 93519",
+    assignedDriver: "David Ruiz (Executive Sedan #2)",
+    driverPhone: "+1 (310) 555-0844",
+    specialWardrobeNotes: "Combat tactical harness and dirt weathering.",
+    status: "published",
+  },
+  {
+    id: "sch-11",
+    actorId: "act-2",
+    actorName: "Elena Rostova",
+    characterName: "Lady Sarah",
+    project: "The Crown Legacy",
+    shootDate: "Sunday, Nov 22, 2026",
+    isoDate: "2026-11-22",
+    category: "travel",
+    dayNumber: 0,
+    totalDays: 60,
+    pickupTime: "03:00 PM",
+    hmuTime: "N/A",
+    onSetTime: "05:30 PM",
+    estimatedWrapTime: "11:00 AM (+1 Day)",
+    locationName: "LAX Bradley Terminal &rarr; London Heathrow (BA282)",
+    locationAddress: "1 World Way, Los Angeles, CA 90045",
+    assignedDriver: "VIP Airport Chauffeur Service",
+    driverPhone: "+1 (310) 555-0999",
+    specialWardrobeNotes: "Passport, UK visa waiver & SAG per diem packet verified.",
+    status: "published",
+  },
+  {
+    id: "sch-12",
+    actorId: "act-1",
+    actorName: "Marcus Sterling",
+    characterName: "N/A",
+    project: "SAG-AFTRA Mandatory Turnaround",
+    shootDate: "Wednesday, Nov 25, 2026",
+    isoDate: "2026-11-25",
+    category: "blackout",
+    dayNumber: 0,
+    totalDays: 0,
+    pickupTime: "N/A",
+    hmuTime: "N/A",
+    onSetTime: "Blackout",
+    estimatedWrapTime: "Full Day",
+    locationName: "Personal Residence / Blackout Day",
+    locationAddress: "Beverly Hills, CA 90210",
+    assignedDriver: "N/A",
+    driverPhone: "N/A",
+    specialWardrobeNotes: "Contractual rest day per SAG Article 14.",
     status: "published",
   },
 ];
@@ -497,6 +706,26 @@ export function CinemaProvider({ children }: { children: React.ReactNode }) {
     toast.info(`Meeting status updated to ${status}.`);
   };
 
+  const addShootSchedule = (newSchedule: Omit<ShootScheduleCall, "id">) => {
+    const created: ShootScheduleCall = {
+      ...newSchedule,
+      id: `sch-${Date.now()}`,
+    };
+    setShootSchedules((prev) => [created, ...prev]);
+
+    const alert: DispatchedAlert = {
+      id: `alt-${Date.now()}`,
+      actorName: created.actorName,
+      title: `Schedule Added: ${created.project} (${created.isoDate || created.shootDate})`,
+      details: `Call: ${created.onSetTime} • Pickup: ${created.pickupTime} • Location: ${created.locationName}`,
+      timestamp: "Just now",
+      channel: "Mobile Push",
+    };
+    setDispatchedAlerts((prev) => [alert, ...prev]);
+
+    toast.success(`Schedule added for ${created.actorName}! Real-time alert dispatched.`);
+  };
+
   const updateShootSchedule = (id: string, updates: Partial<ShootScheduleCall>) => {
     setShootSchedules((prev) =>
       prev.map((s) => (s.id === id ? { ...s, ...updates } : s))
@@ -576,6 +805,7 @@ export function CinemaProvider({ children }: { children: React.ReactNode }) {
         scheduleMeeting,
         updateMeetingStatus,
         shootSchedules,
+        addShootSchedule,
         updateShootSchedule,
         acknowledgeSchedule,
         locations,

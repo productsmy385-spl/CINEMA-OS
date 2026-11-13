@@ -30,6 +30,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
+import { ManagerCalendarPalette } from "./components/manager-calendar-palette";
 
 export default function ManagerConsoleView() {
   const {
@@ -46,6 +47,7 @@ export default function ManagerConsoleView() {
   } = useCinema();
 
   const [searchQuery, setSearchQuery] = useState("");
+  const [activeTab, setActiveTab] = useState<"calendar" | "focus">("calendar");
   const [showAddActorModal, setShowAddActorModal] = useState(false);
   const [showEditScheduleModal, setShowEditScheduleModal] = useState(false);
   const [selectedSchedule, setSelectedSchedule] = useState(shootSchedules[0]);
@@ -159,8 +161,42 @@ export default function ManagerConsoleView() {
         }
       />
 
-      {/* Roster Switcher Bar */}
-      <div className="rounded-xl border border-border bg-card p-3 shadow-card flex items-center gap-3 overflow-x-auto">
+      {/* View Mode Switcher */}
+      <div className="flex items-center gap-2 border-b border-border pb-2">
+        <button
+          onClick={() => setActiveTab("calendar")}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+            activeTab === "calendar"
+              ? "bg-[#071B2B] text-white shadow-sm ring-1 ring-[#167D8D]"
+              : "bg-card text-muted-foreground hover:text-foreground border border-border"
+          }`}
+        >
+          <CalendarDays className="h-4 w-4 text-[#B9E4E8]" />
+          <span>Work Schedules & Calendar Palette</span>
+          <span className="ml-1 rounded-full bg-[#167D8D] px-1.5 py-0.5 text-[10px] text-white">
+            {shootSchedules.length}
+          </span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab("focus")}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+            activeTab === "focus"
+              ? "bg-[#071B2B] text-white shadow-sm ring-1 ring-[#167D8D]"
+              : "bg-card text-muted-foreground hover:text-foreground border border-border"
+          }`}
+        >
+          <User className="h-4 w-4 text-[#167D8D]" />
+          <span>Focus Talent & Day Call Sheet</span>
+        </button>
+      </div>
+
+      {activeTab === "calendar" ? (
+        <ManagerCalendarPalette />
+      ) : (
+        <>
+          {/* Roster Switcher Bar */}
+          <div className="rounded-xl border border-border bg-card p-3 shadow-card flex items-center gap-3 overflow-x-auto">
         <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-2 shrink-0">
           Client Roster:
         </span>
@@ -420,6 +456,8 @@ export default function ManagerConsoleView() {
           </Card>
         </div>
       </div>
+      </>
+      )}
 
       {/* Adjust Schedule Modal */}
       {showEditScheduleModal && (

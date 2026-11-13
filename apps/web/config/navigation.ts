@@ -129,6 +129,12 @@ export function getNavigationForRole(role: ConsoleRole): NavGroup[] {
             badge: "Active",
           },
           {
+            title: "Work Schedules & Calendar",
+            href: "/manager/calendar",
+            icon: CalendarDays,
+            badge: "Palette",
+          },
+          {
             title: "Actor Roster & Workspaces",
             href: "/actors",
             icon: User,
