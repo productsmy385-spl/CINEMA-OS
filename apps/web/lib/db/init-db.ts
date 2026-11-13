@@ -229,3 +229,4 @@ export async function initializeDatabase() {
     client.release();
   }
 }
+
