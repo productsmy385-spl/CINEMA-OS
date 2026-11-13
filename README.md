@@ -119,3 +119,4 @@ CINEMA-OS/
 ## 📄 License & Attribution
 
 CINEMA OS incorporates the DropX Admin design system foundation. In accordance with Section 2 of its license terms, visible attribution to DataDropX is preserved within the application footer and configuration metadata. All product features, film production workflows, talent management engines, call sheet generators, and context architecture are proprietary.
+

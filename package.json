@@ -4,8 +4,9 @@
   "private": true,
   "description": "CINEMA OS — Enterprise Film Industry Management & Production Operating System",
   "scripts": {
+    "build": "cd apps/web && npm install --legacy-peer-deps && npm run build",
+    "start": "cd apps/web && npx next start",
     "dev": "npm run dev --prefix apps/web",
-    "build": "npm run build --prefix apps/web",
     "typecheck": "npm run typecheck --prefix apps/web",
     "mobile:start": "npm run start --prefix apps/mobile",
     "desktop:dev": "npm run dev --prefix apps/desktop"
