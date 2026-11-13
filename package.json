@@ -4,7 +4,7 @@
   "private": true,
   "description": "CINEMA OS — Enterprise Film Industry Management & Production Operating System",
   "scripts": {
-    "build": "cd apps/web && npm install --legacy-peer-deps && npm run build",
+    "build": "cd apps/web && npm install --legacy-peer-deps && (npm install @tailwindcss/oxide-linux-x64-gnu@4.3.3 --no-save || true) && npm run build",
     "start": "cd apps/web && npx next start",
     "dev": "npm run dev --prefix apps/web",
     "typecheck": "npm run typecheck --prefix apps/web",
